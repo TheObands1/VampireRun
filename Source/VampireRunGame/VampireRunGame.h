@@ -4,3 +4,5 @@
 
 #include "CoreMinimal.h"
 
+#define COLLISION_DAYLIGHTDAMAGE    ECC_GameTraceChannel1
+
