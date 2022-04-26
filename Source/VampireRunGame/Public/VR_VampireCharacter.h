@@ -16,6 +16,13 @@ public:
 	AVR_VampireCharacter();
 
 protected:
+	UPROPERTY(BlueprintReadOnly, Category = "Movement")
+	float FowardAxisValue;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Movement")
+	float RightAxisValue;
+
+protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 

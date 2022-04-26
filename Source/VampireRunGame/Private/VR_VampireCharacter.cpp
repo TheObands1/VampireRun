@@ -9,6 +9,8 @@ AVR_VampireCharacter::AVR_VampireCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	FowardAxisValue = 0;
+	RightAxisValue = 0;
 }
 
 // Called when the game starts or when spawned
@@ -20,12 +22,14 @@ void AVR_VampireCharacter::BeginPlay()
 
 void AVR_VampireCharacter::MoveRight(float AxisValue)
 {
-	AddMovementInput(GetActorRightVector() * AxisValue);
+	//AddMovementInput(GetActorRightVector() * AxisValue);
+	FowardAxisValue = AxisValue;
 }
 
 void AVR_VampireCharacter::MoveFoward(float AxisValue)
 {
-	AddMovementInput(GetActorForwardVector() * AxisValue);
+	//AddMovementInput(GetActorForwardVector() * AxisValue);
+	RightAxisValue = AxisValue;
 }
 
 // Called every frame
