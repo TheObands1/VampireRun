@@ -7,6 +7,8 @@
 #include "VR_VampireCharacter.generated.h"
 
 class UVR_HealthComponent;
+class UCameraComponent;
+class USpringArmComponent;
 
 UCLASS()
 class VAMPIRERUNGAME_API AVR_VampireCharacter : public ACharacter
@@ -14,6 +16,13 @@ class VAMPIRERUNGAME_API AVR_VampireCharacter : public ACharacter
 	GENERATED_BODY()
 
 protected:
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	USpringArmComponent* SpringArmComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UCameraComponent* TopDownCameraComponent;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UVR_HealthComponent* VampireHealthComponent;
 

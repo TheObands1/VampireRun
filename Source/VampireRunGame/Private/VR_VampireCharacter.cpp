@@ -3,12 +3,38 @@
 
 #include "VR_VampireCharacter.h"
 #include "Components/VR_HealthComponent.h"
+#include "Camera/CameraComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 AVR_VampireCharacter::AVR_VampireCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	// Don't rotate character to camera direction
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationYaw = false;
+	bUseControllerRotationRoll = false;
+
+	//GetCharacterMovement()->bOrientRotationToMovement = true; // Rotate character to moving direction
+	GetCharacterMovement()->bConstrainToPlane = true;
+	GetCharacterMovement()->bSnapToPlaneAtStart = true;
+
+	// Create a camera boom...
+	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponentComponent"));
+	SpringArmComponent->SetupAttachment(RootComponent);
+	SpringArmComponent->SetUsingAbsoluteRotation(true); // Don't want arm to rotate when character does
+	SpringArmComponent->TargetArmLength = 800.f;
+	SpringArmComponent->SetRelativeRotation(FRotator(-40.f, 0.f, 0.f));
+	SpringArmComponent->bDoCollisionTest = false; // Don't want to pull camera in when it collides with level
+
+	// Create a camera...
+	TopDownCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("TopDownCameraComponent"));
+	TopDownCameraComponent->SetupAttachment(SpringArmComponent, USpringArmComponent::SocketName);
+	TopDownCameraComponent->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+
 
 	VampireHealthComponent = CreateDefaultSubobject<UVR_HealthComponent>(TEXT("VampireHealthComponent"));
 
