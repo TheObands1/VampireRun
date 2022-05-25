@@ -20,6 +20,7 @@ AVR_DaylightDamageDoer::AVR_DaylightDamageDoer()
 	Damage = 50.0f;
 	TraceLength = 1000.0f;
 	bIsDebugging = false;
+	DistanceFromPlayer = 800.0f;
 
 }
 
@@ -41,7 +42,7 @@ void AVR_DaylightDamageDoer::Tick(float DeltaTime)
 	{
 		FVector PlayerLocation = PlayerReference->GetActorLocation();
 
-		SetActorLocation(FVector(GetActorLocation().X, PlayerLocation.Y, GetActorLocation().Z));
+		SetActorLocation(FVector((PlayerLocation.X + DistanceFromPlayer), PlayerLocation.Y, GetActorLocation().Z));
 	}
 
 }

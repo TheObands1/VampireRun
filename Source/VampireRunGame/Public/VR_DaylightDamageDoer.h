@@ -34,6 +34,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage|TraceLength", meta = (ClampMin = 0.0f))
 	float TraceLength;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Distance", meta = (ClampMin = 0.0f))
+	float DistanceFromPlayer;
+
 	AController* MyController;
 
 	TSubclassOf<UDamageType> MyDamageType;

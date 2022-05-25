@@ -51,7 +51,7 @@ void AVR_VampireCharacter::BeginPlay()
 
 void AVR_VampireCharacter::MoveRight(float AxisValue)
 {
-	//AddMovementInput(GetActorRightVector() * AxisValue);
+	//AddMovementInput(GetActorRightVector() * AxisValue); (for the wanted movement, this cannot be used, as camera is not being controlled by mouse)
 	FowardAxisValue = AxisValue;
 }
 
