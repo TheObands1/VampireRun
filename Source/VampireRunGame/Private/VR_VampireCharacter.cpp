@@ -2,12 +2,15 @@
 
 
 #include "VR_VampireCharacter.h"
+#include "Components/VR_HealthComponent.h"
 
 // Sets default values
 AVR_VampireCharacter::AVR_VampireCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	VampireHealthComponent = CreateDefaultSubobject<UVR_HealthComponent>(TEXT("VampireHealthComponent"));
 
 	FowardAxisValue = 0;
 	RightAxisValue = 0;

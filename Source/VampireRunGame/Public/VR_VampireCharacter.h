@@ -6,10 +6,16 @@
 #include "GameFramework/Character.h"
 #include "VR_VampireCharacter.generated.h"
 
+class UVR_HealthComponent;
+
 UCLASS()
 class VAMPIRERUNGAME_API AVR_VampireCharacter : public ACharacter
 {
 	GENERATED_BODY()
+
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UVR_HealthComponent* VampireHealthComponent;
 
 public:
 	// Sets default values for this character's properties
@@ -37,5 +43,7 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	UVR_HealthComponent* GetHealthComponent() { return VampireHealthComponent; };
 
 };
