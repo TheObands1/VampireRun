@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AVR_VampireCharacter::AVR_VampireCharacter()
@@ -40,13 +41,22 @@ AVR_VampireCharacter::AVR_VampireCharacter()
 
 	FowardAxisValue = 0;
 	RightAxisValue = 0;
+	BloodLossRate = 1.0f;
+	BloodLossAmount = 20.0f;
+	DamageDueToLowBlood = 5.0f;
+	DamageDueToLowBloodRate = 0.7f;
+	MaxBloodAmount = 100.0f;
+	CurrentBloodAmount = MaxBloodAmount;
 }
 
 // Called when the game starts or when spawned
 void AVR_VampireCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	CurrentBloodAmount = MaxBloodAmount;
+
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle_UpdateInitialBloodAmount, this, &AVR_VampireCharacter::UpdateBloodAmount, 0.2f, false);
+	ActivateBloodLossTimer();
 }
 
 void AVR_VampireCharacter::MoveRight(float AxisValue)
@@ -61,11 +71,45 @@ void AVR_VampireCharacter::MoveFoward(float AxisValue)
 	RightAxisValue = AxisValue;
 }
 
+void AVR_VampireCharacter::ReduceBloodAmount()
+{
+	CurrentBloodAmount = FMath::Clamp((CurrentBloodAmount - BloodLossAmount), 0.0f, MaxBloodAmount);
+	OnBloodUpdateDelegate.Broadcast(CurrentBloodAmount, MaxBloodAmount);
+
+	if (CurrentBloodAmount == 0.0f)
+	{
+		GetWorld()->GetTimerManager().ClearTimer(TimerHandle_ReduceBloodAmount);
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle_DamageSelfDueToLowBlood, this, &AVR_VampireCharacter::DamageSelfDueToLowBlood, DamageDueToLowBloodRate, true);
+	}
+}
+
+void AVR_VampireCharacter::DamageSelfDueToLowBlood()
+{
+	if (CurrentBloodAmount == 0)
+	{
+		UGameplayStatics::ApplyDamage(this, DamageDueToLowBlood, GetController(), this, MyDamageType);
+	}
+	else //if player somehow gets more blood, stop damaging yourself and start, eventually, losing blood.
+	{
+		GetWorld()->GetTimerManager().ClearTimer(TimerHandle_DamageSelfDueToLowBlood);
+		ActivateBloodLossTimer();
+	}
+}
+
+void AVR_VampireCharacter::ActivateBloodLossTimer()
+{
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle_ReduceBloodAmount, this, &AVR_VampireCharacter::ReduceBloodAmount, BloodLossRate, true, 3.0f);
+}
+
+void AVR_VampireCharacter::UpdateBloodAmount()
+{
+	OnBloodUpdateDelegate.Broadcast(CurrentBloodAmount, MaxBloodAmount);
+}
+
 // Called every frame
 void AVR_VampireCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input
@@ -77,5 +121,18 @@ void AVR_VampireCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 
 	PlayerInputComponent->BindAxis("MoveFoward", this, &AVR_VampireCharacter::MoveFoward);
 
+}
+
+void AVR_VampireCharacter::AddBlood(float BloodToAdd)
+{
+	if (BloodToAdd < 0)
+	{
+		return;
+	}
+	else
+	{
+		CurrentBloodAmount = FMath::Clamp((CurrentBloodAmount + BloodToAdd), 0.0f, MaxBloodAmount);
+		OnBloodUpdateDelegate.Broadcast(CurrentBloodAmount, MaxBloodAmount);
+	}
 }
 

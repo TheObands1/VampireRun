@@ -41,10 +41,7 @@ void UVR_HealthComponent::TakingDamage(AActor* DamagedActor, float Damage, const
 
 	CurrentHealth = FMath::Clamp(CurrentHealth - Damage, 0.0f, MaxHealth);
 
-	if (CurrentHealth <= MaxHealth/2)
-	{
-		bIsLowOnHealth = true;
-	}
+	CurrentHealth <= (MaxHealth / 2) ? bIsLowOnHealth = true : bIsLowOnHealth = false;
 
 	if (CurrentHealth == 0.0f)
 	{

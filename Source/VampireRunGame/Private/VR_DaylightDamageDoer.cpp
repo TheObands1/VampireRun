@@ -64,7 +64,7 @@ void AVR_DaylightDamageDoer::DamagePlayer()
 	QueryParams.bTraceComplex = true;
 
 	FHitResult HitResult;
-	bool bDidLineTraceHit = GetWorld()->LineTraceSingleByChannel(HitResult, GetActorLocation(), TraceEnd, COLLISION_DAYLIGHTDAMAGE, QueryParams);
+	bool bDidLineTraceHit = GetWorld()->LineTraceSingleByChannel(HitResult, GetActorLocation(), PlayerReference->GetActorLocation(), COLLISION_DAYLIGHTDAMAGE, QueryParams);
 
 	if (bDidLineTraceHit)
 	{
@@ -80,7 +80,11 @@ void AVR_DaylightDamageDoer::DamagePlayer()
 
 	if (bIsDebugging)
 	{
-		DrawDebugLine(GetWorld(), GetActorLocation(), TraceEnd, FColor::Red, false, 1.0f, 0.0f, 10.0f);
+		//To test the lenght of line
+		//DrawDebugLine(GetWorld(), GetActorLocation(), TraceEnd, FColor::Red, false, 1.0f, 0.0f, 10.0f);
+		
+		//To test where it hits:
+		 DrawDebugLine(GetWorld(), GetActorLocation(), HitResult.Location, FColor::Red, false, 1.0f, 0.0f, 10.0f);
 	}
 
 }
